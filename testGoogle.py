@@ -216,4 +216,4 @@ if input_text:
     for role, text in st.session_state['chat_history']:
         st.write(f'{role}: {text}')
 else:
-    st.write("You can upload files(PDF, Word, Excel, PPT, TXT), enter website URLs or just start your queries.")
+    st.write("You can upload files(PDF, Excel, TXT), enter website URLs or just start your queries.")
