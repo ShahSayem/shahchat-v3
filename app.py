@@ -13,6 +13,8 @@ from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 
+# import vision
+
 # Load environment variables
 load_dotenv()
 genai.configure(api_key=os.getenv('Google_API_KEY'))
@@ -58,18 +60,6 @@ def load_txt_documents(txt_path):
     documents = loader.load()
     return documents
 
-# def load_word_documents(word_path):
-#     loader = UnstructuredWordDocumentLoader(word_path)
-#     documents = loader.load()
-#     return documents
-
-
-
-# def load_powerpoint_documents(ppt_path):
-#     loader = UnstructuredPowerPointLoader(ppt_path)
-#     documents = loader.load()
-#     return documents
-
 
 # Streamlit UI
 st.header('Gemini LLM Chatbot with Multiple Files & URLs by Shah Sayem')
@@ -95,10 +85,6 @@ def load_files():
             documents.extend(load_excel_documents(f"./{uploaded_file.name}"))
         elif file_extension == "txt":
             documents.extend(load_txt_documents(f"./{uploaded_file.name}"))
-        # elif file_extension == "docx":
-        #     documents.extend(load_word_documents(f"./{uploaded_file.name}"))
-        # elif file_extension == "pptx":
-        #     documents.extend(load_powerpoint_documents(f"./{uploaded_file.name}"))
 
 def load_urls():
     for url in urls:
@@ -126,34 +112,36 @@ def get_chunks():
     return db 
 
 # Upload multiple PDFs and other files
-uploaded_files = st.file_uploader("Upload files (PDF, Excel, TXT)", type=["pdf", "xlsx", "txt"], accept_multiple_files=True)
-# submit_files = st.button("Submit & Process files")
+with st.sidebar:
+    uploaded_files = st.file_uploader("Upload files (PDF, Excel, TXT)", type=["pdf", "xlsx", "txt"], accept_multiple_files=True)
+    # submit_files = st.button("Submit & Process files")
 
-# Handle file uploads
-if uploaded_files:
-    load_files()
+    # Handle file uploads
+    if uploaded_files:
+        load_files()
 
-# Input multiple URLs
-urls = st.text_area("Enter website URLs (separate by commas)").split(",")
-# submit_urls = st.button("Submit & Process urls")
+    # Input multiple URLs
+    urls = st.text_area("Enter website URLs (separate by commas)").split(",")
+    # submit_urls = st.button("Submit & Process urls")
 
-# Handle URLs
-if urls:
-    load_urls() 
-    
-process = st.button("Process files & urls")
+    # Handle URLs
+    if urls:
+        load_urls() 
+        
+    process = st.button("Process files & urls")
 
-db = get_chunks()
+if documents:
+    db = get_chunks()
 
-if process:
-    with st.spinner("Processing..."):
-        db = get_chunks()
+    if process and documents:
+        with st.spinner("Processing..."):
+            db = get_chunks()
 
-        st.success("Processed files & urls") 
+            st.success("Processed files & urls") 
+
 
 # Input box for asking questions
 input_text = st.text_input('Ask here...')
-
 
 if input_text:
     # Display loading spinner
@@ -184,25 +172,14 @@ if input_text:
 
     st.subheader('The Response is: ')
     st.write(res_str)
-    # st.write(str(temp))
 
     # Display source documents
     sources = set()
     store_sources = 'Chatbot Generated'
 
-    curr = ''
+ 
     if documents:
-        for doc in context_documents:
-            curr = doc.metadata['source']
-            if curr.startswith("./"):
-                curr = curr[2:]
-
-            sources.add(f"- {curr}")
-
-
-        store_sources = ''
-        for source in sources:    
-            store_sources += ('\n' + source)
+        store_sources = 'Uploaded Files & Urls'
 
     st.write(f'**Sources**: {store_sources}')
 
