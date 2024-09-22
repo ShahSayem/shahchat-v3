@@ -62,6 +62,7 @@ def load_txt_documents(txt_path):
 
 
 # Streamlit UI
+st.set_page_config(page_title="Gemini LLM Chatbot")
 st.header('Gemini LLM Chatbot with Multiple Files & URLs by Shah Sayem')
 
 # Initialize session state for chat history
