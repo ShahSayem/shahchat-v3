@@ -1,4 +1,5 @@
 import os
+import streamlit as st
 import google.generativeai as genai
 import requests
 from bs4 import BeautifulSoup
@@ -20,6 +21,9 @@ chat = model.start_chat(history=[])
 
 class GeminiChatbot:
     def __init__(self):
+        if 'chat_instance' not in st.session_state:
+            st.session_state['chat_instance'] = model.start_chat(history=[])
+            
         self.documents = []
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         self.embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-MiniLM-L3-v2")
@@ -27,6 +31,7 @@ class GeminiChatbot:
     # Get response from Gemini model
     def get_gemini_response(self, question):
         try:
+            chat = st.session_state['chat_instance']
             response = chat.send_message(question, stream=True)
             return response
         except Exception as e:
