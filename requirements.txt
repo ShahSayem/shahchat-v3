@@ -10,5 +10,4 @@ requests
 unstructured
 beautifulsoup4
 sentence-transformers
-
-langchain_huggingface
+google-generativeai
