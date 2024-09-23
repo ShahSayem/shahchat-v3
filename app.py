@@ -1,17 +1,32 @@
 import os
-import streamlit as st
-import google.generativeai as genai
 import requests
+import streamlit as st
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-from langchain.document_loaders import PyPDFLoader, TextLoader, UnstructuredExcelLoader
-from langchain.embeddings import HuggingFaceEmbeddings
+import google.generativeai as genai
 from langchain.schema import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.document_loaders import (PyPDFLoader, TextLoader,
+                                        UnstructuredExcelLoader)
+
+
+""" 
+Gemini Pro free to use limit:
+    15 RPM (requests per minute)
+
+    32,000 TPM (tokens per minute)
+
+    1,500 RPD (requests per day)
+"""
 
 # Load environment variables
 load_dotenv()
+
+# curr = 0
+# gemini_api_keys = ['Google_API_KEY', 'Google_API_KEY2', 'Google_API_KEY3', 'Google_API_KEY4']
+
 genai.configure(api_key=os.getenv('Google_API_KEY'))
 
 # Load Gemini Pro model
@@ -21,12 +36,13 @@ chat = model.start_chat(history=[])
 
 class GeminiChatbot:
     def __init__(self):
-        if 'chat_instance' not in st.session_state:
-            st.session_state['chat_instance'] = model.start_chat(history=[])
-            
         self.documents = []
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         self.embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-MiniLM-L3-v2")
+
+        # Initialize the chat instance in session state
+        if 'chat_instance' not in st.session_state:
+            st.session_state['chat_instance'] = chat
 
     # Get response from Gemini model
     def get_gemini_response(self, question):
@@ -35,8 +51,15 @@ class GeminiChatbot:
             response = chat.send_message(question, stream=True)
             return response
         except Exception as e:
+            st.error(f"Error: Broken response from Gemini API: {e}")
+            # if (curr >= 3):
+            #     curr = 0
+            # else:
+            #     curr += 1
+
+            # genai.configure(api_key=os.getenv(gemini_api_keys[curr]))    
             return e
-        
+                
     # Scrape a webpage and convert it into a LangChain Document object
     def scrape_website_as_document(self, url):
         try:
@@ -48,7 +71,8 @@ class GeminiChatbot:
             return webpage_document
         
         except Exception as e:
-            return None
+            st.error(f"Error fetching or parsing the website: {e}")
+            return e
 
     # Load PDF files as LangChain Document objects
     def load_pdf_documents(self, pdf_path):
@@ -77,5 +101,6 @@ class GeminiChatbot:
         db = FAISS.from_documents(final_documents, self.embedding_function)
 
         return db
+
 
 
