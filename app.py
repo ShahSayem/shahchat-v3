@@ -26,9 +26,12 @@ class GeminiChatbot:
 
     # Get response from Gemini model
     def get_gemini_response(self, question):
-        response = chat.send_message(question, stream=True)
-        return response
-
+        try:
+            response = chat.send_message(question, stream=True)
+            return response
+        except Exception as e:
+            return e
+        
     # Scrape a webpage and convert it into a LangChain Document object
     def scrape_website_as_document(self, url):
         try:
