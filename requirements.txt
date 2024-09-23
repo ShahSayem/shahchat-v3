@@ -9,5 +9,6 @@ faiss-cpu
 requests
 unstructured
 beautifulsoup4
-google-generativeai
 sentence-transformers
+
+langchain_huggingface
