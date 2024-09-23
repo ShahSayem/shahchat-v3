@@ -1,9 +1,10 @@
 import streamlit as st
+import torch
 from app import GeminiChatbot
 
 # Streamlit UI
 st.set_page_config(
-    page_title="Gemini LLM Chatbot",
+    page_title="LLM Chatbot",
     initial_sidebar_state="collapsed"
 )
 
@@ -58,14 +59,17 @@ def get_combined_prompt():
     return combined_prompt
 
 
-def process_display_response():
-    res_str = ""
-    for chunk in response:
-        res_str += chunk.text
+def process_display_chat_response_history():
+    try:
+        st.subheader('The Response is: ')
+        res_str = ""
+        for chunk in response:
+            res_str += chunk.text
 
-    st.subheader('The Response is: ')
-    st.write(res_str)
-
+        st.write(res_str)
+    except Exception as e:
+        pass
+    
     # Display sources
     sources = 'Chatbot Generated'
     if chatbot.documents:
@@ -73,10 +77,6 @@ def process_display_response():
 
     st.write(f'**Sources**: {sources}')
 
-    return res_str, sources
-
-
-def update_display_chat_history(res_str, sources):
     st.session_state['chat_history'].append(('**User**', input_text))
     st.session_state['chat_history'].append(('**Bot**', res_str))
     st.session_state['chat_history'].append(('Sources', sources))
@@ -110,6 +110,9 @@ if chatbot.documents:
             db = chatbot.process_documents()
             st.success("Processed files & urls")
 
+    # Clear the CUDA cache to free up memory
+    torch.cuda.empty_cache()
+
 # Input box for asking questions
 input_text = st.text_input('Ask here...')
 
@@ -120,12 +123,14 @@ if input_text:
         combined_prompt = get_combined_prompt()
 
         # generating response
-        response = chatbot.get_gemini_response(combined_prompt)
+        try:
+            response = chatbot.get_gemini_response(combined_prompt)
+        except Exception as e:
+            response = e
+            st.error(f"Broken response from Gemini Pro API: {e}")
 
-        # Process and display the response
-        res_str, sources = process_display_response()
-
-        # Update and display chat history
-        update_display_chat_history(res_str, sources)
+        # Process and display the response and chat history
+        process_display_chat_response_history()
 else:
     st.write("You can upload files(PDF, Excel, TXT), enter website URLs or just start your queries.")
+
