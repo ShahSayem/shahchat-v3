@@ -8,7 +8,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-st.header('Gemini LLM Chatbot with Multiple Files & URLs by Shah Sayem')
+st.header('Gemini LLM Chatbot with Multiple Files & URLs')
 
 # Initialize session state for chat history
 if 'chat_history' not in st.session_state:
