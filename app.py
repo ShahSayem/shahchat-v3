@@ -24,9 +24,6 @@ Gemini Pro free to use limit:
 # Load environment variables
 load_dotenv()
 
-# curr = 0
-# gemini_api_keys = ['Google_API_KEY', 'Google_API_KEY2', 'Google_API_KEY3', 'Google_API_KEY4']
-
 genai.configure(api_key=os.getenv('Google_API_KEY'))
 
 # Load Gemini Pro model
@@ -49,15 +46,12 @@ class GeminiChatbot:
         try:
             chat = st.session_state['chat_instance']
             response = chat.send_message(question, stream=True)
+          
             return response
+          
         except Exception as e:
             st.error(f"Error: Broken response from Gemini API: {e}")
-            # if (curr >= 3):
-            #     curr = 0
-            # else:
-            #     curr += 1
-
-            # genai.configure(api_key=os.getenv(gemini_api_keys[curr]))    
+   
             return e
                 
     # Scrape a webpage and convert it into a LangChain Document object
@@ -72,6 +66,7 @@ class GeminiChatbot:
         
         except Exception as e:
             st.error(f"Error fetching or parsing the website: {e}")
+          
             return e
 
     # Load PDF files as LangChain Document objects
