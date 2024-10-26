@@ -60,8 +60,9 @@ def get_combined_prompt():
 
 
 def process_display_chat_response_history():
-    try:
-        st.subheader('The Response is: ')
+    st.subheader('The Response is: ')
+    
+    try:  
         res_str = ""
         for chunk in response:
             res_str += chunk.text
