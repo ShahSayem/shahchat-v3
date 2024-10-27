@@ -5,7 +5,7 @@ from app import GeminiChatbot
 # Streamlit UI
 st.set_page_config(
     page_title="LLM Chatbot",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 st.header('Gemini LLM Chatbot with Multiple Files & URLs')
