@@ -1,7 +1,7 @@
 # Gemini LLM Chatbot with File & URL Processing
 
 ## Overview
-This project implements a chatbot powered by Google's Gemini Pro and Paraphrase-MiniLM-L3-v2 large language models (LLM). The chatbot can process user queries by leveraging uploaded documents (PDF, Excel, TXT) and web pages, providing intelligent responses using context retrieved from these sources.
+This project implements a chatbot powered by Google's Gemini-1.5-flash and Paraphrase-MiniLM-L3-v2 large language models (LLM). The chatbot can process user queries by leveraging uploaded documents (PDF, Excel, TXT) and web pages, providing intelligent responses using context retrieved from these sources.
 
 ## Features
 - Supports multiple document formats (PDF, Excel, TXT) as knowledge sources.
