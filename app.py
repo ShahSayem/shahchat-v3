@@ -13,7 +13,7 @@ from langchain.document_loaders import (PyPDFLoader, TextLoader,
 
 
 """ 
-Gemini Pro free to use limit:
+Gemini 2.0 Flash-Lite free to use limit:
     15 RPM (requests per minute)
 
     1,000,000 TPM (tokens per minute)
@@ -46,12 +46,12 @@ class GeminiChatbot:
         try:
             chat = st.session_state['chat_instance']
             response = chat.send_message(question, stream=True)
-          
+
             return response
-          
+        
         except Exception as e:
             st.error(f"Error: Broken response from Gemini API: {e}")
-   
+    
             return e
                 
     # Scrape a webpage and convert it into a LangChain Document object
@@ -66,7 +66,7 @@ class GeminiChatbot:
         
         except Exception as e:
             st.error(f"Error fetching or parsing the website: {e}")
-          
+
             return e
 
     # Load PDF files as LangChain Document objects
