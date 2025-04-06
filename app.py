@@ -13,7 +13,7 @@ from langchain.document_loaders import (PyPDFLoader, TextLoader,
 
 
 """ 
-Gemini 2.0 Flash-Lite free to use limit:
+Gemini 1.5 Flash free to use limit:
     15 RPM (requests per minute)
 
     1,000,000 TPM (tokens per minute)
