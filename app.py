@@ -12,14 +12,13 @@ from langchain.document_loaders import (PyPDFLoader, TextLoader,
                                         UnstructuredExcelLoader)
 
 
-""" 
-Gemini 1.5 Flash free to use limit:
-    15 RPM (requests per minute)
+# Gemini 1.5 Flash free to use limit:
+#     30 RPM (requests per minute)
 
-    1,000,000 TPM (tokens per minute)
+#     1,000,000 TPM (tokens per minute)
 
-    1,500 RPD (requests per day)
-"""
+#     1,500 RPD (requests per day)
+
 
 # Load environment variables
 load_dotenv()
