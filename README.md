@@ -49,7 +49,7 @@ $ streamlit run client.py
 ```
 
 ### 2. Upload Files & Add URLs
-- Use the sidebar to upload PDF, Excel, or TXT files.
+- Use the sidebar at upper left corner to upload PDF, Excel, or TXT files.
 - Enter website URLs to scrape relevant content.
 - Click the `Process files & URLs` button to preprocess documents.
 
